@@ -14,16 +14,15 @@
                               []
                               s)))))
 
+
 ; #73 - Analyze a Tic-Tac-Toe Board
 (def q-73 (fn [r]
-            (let [cg (map (fn [n] (fn [s] (apply vector (map #(get % n) s)))) (range 3))
-                  c (map #(% r) cg)
-                  dg (map (fn [n] (fn [s] (get s n))) (range 3))
-                  d [(apply vector (map #(%1 %2) dg r)) (apply vector (map #(%1 %2) dg (reverse r)))] ]
-              (first (filter
-                       #(not (= % nil))
-                       (map
-                         (fn [s]
-                           (reduce #(when (and (= %1 %2) (not (= %1 :e))) %2) s))
-                         (concat r c d))))
-              )))
+            (let [c (apply map list r)
+                  d [(for [i (range 3)] (get (get r (- 2 i)) i))
+                     (for [i (range 3)] (get (get r i) i))]]
+              (->> (map
+                     (fn [s]
+                       (reduce #(when (and (= %1 %2) (not (= %1 :e))) %2) s))
+                     (concat r c d))
+                   (filter some?)
+                   (first)))))
