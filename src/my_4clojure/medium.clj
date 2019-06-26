@@ -20,4 +20,13 @@
                 (map read-string (clojure.string/split s #","))))
             ))
 
-
+; #85 - Power Set
+(def q-85 (fn ss [s]
+            (if (empty? s)
+              #{#{}}
+              (let [e #{(first s)}
+                    ssr  (ss (set (rest s)))]
+                (clojure.set/union
+                  (set (map #(clojure.set/union e %) ssr))
+                  ssr) )
+              )))
