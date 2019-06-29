@@ -1,5 +1,4 @@
 (ns my-4clojure.easy)
-(use 'clojure.test)
 
 ; #26 - Fibonacci Sequence
 (def q-26 (fn

@@ -1,6 +1,4 @@
 (ns my-4clojure.medium)
-(use 'clojure.test)
-
 
 ; #43 - Reverse Interleave
 (def q-43 #(map (fn [s] (take-nth %2 (drop s %1))) (range %2)))
@@ -30,3 +28,8 @@
                   (set (map #(clojure.set/union e %) ssr))
                   ssr) )
               )))
+
+
+(filter odd?) [1 2 3]
+
+

@@ -1,5 +1,4 @@
 (ns my-4clojure.hard)
-(use 'clojure.test)
 
 ; #53 - Longest Increasing Sub-Seq
 (def q-53 (fn [s]
@@ -18,8 +17,8 @@
 ; #73 - Analyze a Tic-Tac-Toe Board
 (def q-73 (fn [r]
             (let [c (apply map list r)
-                  d [(for [i (range 3)] (get (get r (- 2 i)) i))
-                     (for [i (range 3)] (get (get r i) i))]]
+                  d [(map #(get-in r [(- 2 %) %]) (range 3))
+                     (map #(get-in r [% %]) (range 3))]]
               (->> (map
                      (fn [s]
                        (reduce #(when (and (= %1 %2) (not (= %1 :e))) %2) s))
