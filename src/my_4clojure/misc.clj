@@ -36,13 +36,15 @@
              (get board r))
            ))))
 
+(defn move-accessibility [board move]
+  (count (get-next-moves (move-knight board move))))
 
 
 (defn solve-knights-tour-rec [board]
   (let [board-length (count board)
         next-move (+ 1 (apply max (flatten board)))
         completed-tour (> next-move (* board-length board-length))
-        next-moves (get-next-moves board)]
+        next-moves (sort-by (partial move-accessibility board) (get-next-moves board))]
     (if completed-tour
       board
       (first (filter some? (map #(solve-knights-tour-rec (move-knight board %)) next-moves))))))
@@ -52,5 +54,16 @@
                               (vec (repeat (- n 1) (vec (repeat n 0))))))]
          (solve-knights-tour-rec board)))
 
+(defmacro time-sec
+  "Evaluates expr and prints the time it took.  Returns the value of
+ expr."
+  {:added "1.0"}
+  [expr]
+  `(let [start# (. System (nanoTime))
+         ret# ~expr]
+     (prn (str "Elapsed time: " (/ (double (- (. System (nanoTime)) start#)) 1000000.0) " msecs"))
+     ret#))
+
+
 (comment
-  (solve-knights-tour 6))
+  ((time-sec solve-knights-tour) 5))
