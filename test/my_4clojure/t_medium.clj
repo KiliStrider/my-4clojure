@@ -15,6 +15,11 @@
   (q-44 -4 '(:a :b :c)) => '(:c :a :b))
 
 (fact
+  (q-70  "Have a nice day.") => ["a" "day" "Have" "nice"]
+  (q-70  "Clojure is a fun language!") => ["a" "Clojure" "fun" "is" "language"]
+  (q-70  "Fools fall for foolish follies.") => ["fall" "follies" "foolish" "Fools" "for"])
+
+(fact
   (q-74 "4,5,6,7,8,9") => "4,9"
   (q-74 "15,16,25,36,37") => "16,25,36")
 

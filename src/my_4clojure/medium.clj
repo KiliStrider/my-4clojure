@@ -8,6 +8,9 @@
             (flatten (map #(% (mod n (count s)) s)
                           [drop take]))))
 
+; #70 - Word Sorting
+(def q-70 #(sort-by clojure.string/lower-case (re-seq #"\w+" %)))
+
 ; #74 - Filter Perfect Squares
 (def q-74 (fn [s]
             (clojure.string/join
@@ -28,8 +31,3 @@
                   (set (map #(clojure.set/union e %) ssr))
                   ssr) )
               )))
-
-
-(filter odd?) [1 2 3]
-
-

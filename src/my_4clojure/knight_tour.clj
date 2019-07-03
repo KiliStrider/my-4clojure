@@ -1,4 +1,4 @@
-(ns my-4clojure.misc)
+(ns my-4clojure.knight_tour)
 
 (defn get-current-position-number [board]
   (->> board
@@ -54,7 +54,38 @@
   (let [next-moves (sort-by (partial move-accessibility board) (get-next-moves board))]
     (if (completed-tour? board)
       board
-      (first (filter some? (map #(solve-knights-tour-rec (move-knight board %)) next-moves))))))
+      (->> next-moves
+           (map #(solve-knights-tour-rec (move-knight board %)))
+           (filter some?)
+           (first)))))
+
+
+#_(defn solve-knights-tour-iter [board]
+  (loop [cur-board board
+         move-idx 0
+         stack '()]
+    (let []
+      (if (completed-tour? new-board)
+        new-board
+        (->> next-moves
+             (map #(solve-knights-tour-rec (move-knight board %)))
+             (filter some?)
+             (first))))))
+
+#_(defn solve-knights-tour-iter [board]
+  (loop [cur-board board
+         move-idx 0
+         stack '()]
+    (let [possible-moves (sort-by (partial move-accessibility cur-board) (get-next-moves cur-board))
+          next-move (get possible-moves move-idx)
+          new-board (move-knight cur-board next-move)]
+      (if (completed-tour? new-board)
+        new-board
+        (->> next-moves
+             (map #(solve-knights-tour-rec (move-knight board %)))
+             (filter some?)
+             (first))))))
+
 
 (defn create-random-board [n]
   (vec (map vec (partition n
