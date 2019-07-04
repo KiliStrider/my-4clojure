@@ -1,20 +1,32 @@
 (ns my-4clojure.utils)
 
 
-(defn adv-sort-by [key-ord-pairs col]
-  (let [key-fns (take-nth 2 key-ord-pairs)
-        key-to-ord (apply hash-map key-ord-pairs)
-        key-to-idx (zipmap key-fns (range (count key-fns)))]
+(defn order-by
+  "
+  Receives [keyfn1 order1 keyfn2 order2 ...] coll
+  Returns a sorted sequence of the items in coll, where the sort
+  order is determined by comparing (keyfn1 item) by order1, then
+  comparing (keyfn2 item) by order2 ...
+
+  ~~~klipse
+  (order-by [first :desc second :asc] [[9 7] [9 4] [2 5] [9 2]])
+  ~~~
+  "
+  [keyfn-order-pairs coll]
+  {:pre [(even? (count keyfn-order-pairs))]}
+  (let [keyfns (take-nth 2 keyfn-order-pairs)
+        order (vec (take-nth 2 (rest keyfn-order-pairs)))]
     (sort-by
-      (apply juxt key-fns)
+      (apply juxt keyfns)
       (fn [x y]
-        (let [juxt-manipulator #(case (key-to-ord %3)
-                                  :ascending (%1 (key-to-idx %3))
-                                  :descending (%2 (key-to-idx %3)))
-              x-juxt (mapv (partial juxt-manipulator x y) key-fns)
-              y-juxt (mapv (partial juxt-manipulator y x) key-fns)]
-          (compare x-juxt y-juxt)))
-      col)))
+        (->> (interleave order x y)
+             (partition 3)
+             (reduce (fn [[x' y'] [order xi yi]]
+                       (case order
+                         :asc [(conj x' xi) (conj y' yi)]
+                         :desc [(conj x' yi) (conj y' xi)])) [[] []])
+             (apply compare)))
+      coll)))
 
 (comment
   (sort-by
@@ -24,8 +36,8 @@
      {:a "ab0" :b "bb0" :c "cc0" :d "dd0"}
      {:a "ac0" :b "bb0" :c "cc0" :d "dd0"}
      {:a "aa0" :b "bb0" :c "cc0" :d "dd0"}])
-  (adv-sort-by
-    [:a :descending :b :ascending :c :ascending]
+  (order-by
+    [:a :desc :b :asc :c :asc]
     [{:a "aa0" :b "bb0" :c "cc1" :d "dd0"}
      {:a "ab0" :b "bb0" :c "cc0" :d "dd0"}
      {:a "ac0" :b "bb0" :c "cc0" :d "dd0"}
