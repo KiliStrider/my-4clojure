@@ -13,7 +13,12 @@
   ~~~
   "
   [keyfn-order-pairs coll]
-  {:pre [(even? (count keyfn-order-pairs))]}
+  {:pre [((comp even? count) keyfn-order-pairs)
+         (as-> keyfn-order-pairs $
+               (rest $)
+               (take-nth 2 $)
+               (set $)
+               (clojure.set/subset? $ #{:desc :asc}))]}
   (let [keyfns (take-nth 2 keyfn-order-pairs)
         order (vec (take-nth 2 (rest keyfn-order-pairs)))]
     (sort-by
