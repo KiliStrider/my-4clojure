@@ -9,23 +9,21 @@
   direction1, then by comparing (keyfn2 item) with direction
   direction2 ...
 
-  ~~~klipse
-  (order-by [first :desc second :asc] [[9 7] [9 4] [2 5] [9 2]])
-  ~~~
+  Usage example:
+    (order-by [first :desc second :asc] [[9 7] [9 4] [2 5] [9 2]])
   "
-  [keyfn-order-pairs coll]
-  {:pre [((comp even? count) keyfn-order-pairs)
-         (as-> keyfn-order-pairs $
-               (rest $)
-               (take-nth 2 $)
-               (set $)
-               (clojure.set/subset? $ #{:desc :asc}))]}
-  (let [keyfns (take-nth 2 keyfn-order-pairs)
-        order (take-nth 2 (rest keyfn-order-pairs))]
+  [keyfn-direction-pairs coll]
+  {:pre [((comp even? count) keyfn-direction-pairs)
+         (->> keyfn-direction-pairs
+              rest
+              (take-nth 2)
+              (every? #{:asc :desc}))]}
+  (let [keyfns (take-nth 2 keyfn-direction-pairs)
+        directions (take-nth 2 (rest keyfn-direction-pairs))]
     (sort-by
       (apply juxt keyfns)
       (fn [x y]
-        (->> (interleave order x y)
+        (->> (interleave directions x y)
              (partition 3)
              (reduce (fn [[x' y'] [order xi yi]]
                        (case order
