@@ -38,7 +38,7 @@
          [first :desc second :desc] test-coll-2 '([5 5] [3 4] [2 4] [2 3] [2 2])
          [first :asc second :asc] test-coll-2 '([2 2] [2 3] [2 4] [3 4] [5 5])))
 
-(defspec check-order-by 100
+(defspec check-order-by 10000
          (hg/property (fn [v]
                         (let [keyfn-direction-pairs [#(mod % 3) :asc #(mod % 2) :desc #(mod % 5) :asc #(mod % 19) :desc]
                               keyfns (take-nth 2 keyfn-direction-pairs)

@@ -5,7 +5,8 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/test.check "0.10.0-RC1"]
-                 [com.velisco/herbert "0.7.0"]]
+                 [com.velisco/herbert "0.7.0"]
+                 [criterium "0.4.5"]]
   :repl-options {:init-ns my-4clojure.core}
   :plugins [[lein-midje "3.2.1"]]
   :profiles {:uberjar {:aot :all}
