@@ -1,6 +1,21 @@
 (ns my-4clojure.utils)
 
 
+(defn get-keys-paths-to-values
+  "Returns a sequence of all key paths to the values in a given map using DFS walk."
+  [m]
+  (letfn [(children [node]
+            (let [v (get-in m node)]
+              (if (map? v)
+                (map (fn [x] (conj node x)) (keys v))
+                [])))
+          (branch? [node] (-> (children node) seq boolean))]
+    (->> (keys m)
+         (map vector)
+         (mapcat #(tree-seq branch? children %))
+         (filter (comp not #(map? (get-in m %)))))))
+
+
 (defn order-by
   "
   Receives [keyfn1 direction1 keyfn2 direction1 ...] coll

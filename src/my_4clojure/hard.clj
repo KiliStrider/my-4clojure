@@ -27,6 +27,35 @@
                    (filter some?)
                    (first)))))
 
+(defn update-values [f m]
+  (reduce (fn [m' [k v]]
+            (assoc m' k (f v))) {} m))
+
+(defn build-graph [edges]
+  (->> edges
+       (map reverse)
+       (set)
+       (clojure.set/union edges)
+       (group-by first)
+       (update-values #(mapv second %))))
+
+(defn dfs [graph]
+  (loop [[node & nodes] (take 1 (keys graph))
+         visited-nodes #{}]
+    (let [cur-node-children (->> node
+                                (get graph)
+                                (remove #(contains? visited-nodes %)))]
+      (if (nil? node)
+        visited-nodes
+        (recur (concat cur-node-children nodes) (conj visited-nodes node))))))
+
+; #91 - Graph Connectivity
+(def q-91 (fn [edges]
+                 (let [graph (build-graph edges)
+                       visited-nodes (dfs graph)]
+                   (= (count visited-nodes) (count (keys graph))))))
+
+
 (defn deletions [word]
   (let [length (count word)]
     (for [i (range length)

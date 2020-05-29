@@ -26,8 +26,8 @@
             (->> words
                  (group-by #(apply str (sort %)))
                  (vals)
-                 (map set)
                  (remove #(= (count %) 1))
+                 (map set)
                  (set))))
 
 ; #85 - Power Set
